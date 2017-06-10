@@ -11,5 +11,5 @@ import { FocusDirective } from "./directives/ngx-my-date-picker.focus.directive"
     entryComponents: [NgxMyDatePicker],
     exports: [NgxMyDatePicker, NgxMyDatePickerDirective, FocusDirective]
 })
-export class NgxMyDatePickerModule {
+export class NgxMyDPTHModule {
 }

@@ -1,12 +1,12 @@
 ///<reference path="../../node_modules/@types/jasmine/index.d.ts"/>
 
-import {FormsModule} from "@angular/forms";
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement, Component, ViewChild} from '@angular/core';
-import {NgxMyDatePickerModule} from './ngx-my-date-picker.module';
-import {NgxMyDatePickerDirective} from './ngx-my-date-picker.input';
-import {IMyOptions} from "./interfaces/my-options.interface";
+import { FormsModule } from "@angular/forms";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement, Component, ViewChild } from '@angular/core';
+import { NgxMyDPTHModule } from './ngx-my-date-picker.module';
+import { NgxMyDatePickerDirective } from './ngx-my-date-picker.input';
+import { IMyOptions } from "./interfaces/my-options.interface";
 
 let comp: NgxMyDatepickerTestComponent;
 let fixture: ComponentFixture<NgxMyDatepickerTestComponent>;
@@ -21,7 +21,7 @@ let MONTHLABEL: string = '.header tr td:first-child div .headermonthtxt .headerl
 let YEARLABEL: string = '.header tr td:last-child div .headeryeartxt .headerlabelbtn';
 
 function getDefaultDateString(date: Date): string {
-    return date.getFullYear() + '-' + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+    return `${(date.getDate() < 10 ? '0' + date.getDate() : date.getDate())}/${((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1))}/${date.getFullYear()}`;
 }
 
 function getElement(id: string): any {
@@ -32,8 +32,29 @@ function getElements(id: string): Array<any> {
     return fixture.nativeElement.querySelectorAll(id);
 }
 
+function getThaiYearString(year: string) {
+    return `${(+year + 543)}`;
+}
+
+function getThaiString(str: string) {
+    const obj = {
+        Sun: "อา", Mon: "จ", Tue: "อ", Wed: "พ", Thu: "พฤ", Fri: "ศ", Sat: "ส",
+        Jan: "ม.ค.", Feb: "ก.พ.", Mar: "มี.ค.", Apr: "เม.ย.", May: "พ.ค.", Jun: "มิ.ย.",
+        Jul: "ก.ค.", Aug: "ส.ค.", Sep: "ก.ย.", Oct: "ต.ค.", Nov: "พ.ย.", Dec: "ธ.ค."
+    };
+    return obj[str];
+}
+
 @Component({
-    template: '<input class="myDateInput" id="myDateInput" ngx-mydatepicker #dp="ngx-mydatepicker" name="mydate"/>'
+    template: `
+        <input 
+            class="myDateInput" 
+            id="myDateInput" 
+            ngx-mydatepicker 
+            #dp="ngx-mydatepicker" 
+            name="mydate"
+        />
+    `
 })
 class NgxMyDatepickerTestComponent {
     @ViewChild('dp') vcDp: NgxMyDatePickerDirective;
@@ -55,6 +76,9 @@ class NgxMyDatepickerTestComponent {
     }
 
     parseOptions(opts: IMyOptions): void {
+        if (!opts.firstDayOfWeek) {
+            opts.firstDayOfWeek = "mo";
+        }
         this.vcDp.parseOptions(opts);
     }
 
@@ -68,7 +92,7 @@ describe('ngx-mydatepicker', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [NgxMyDatepickerTestComponent],
-            imports: [FormsModule, NgxMyDatePickerModule]
+            imports: [FormsModule, NgxMyDPTHModule]
         });
         fixture = TestBed.createComponent(NgxMyDatepickerTestComponent);
         comp = fixture.componentInstance;
@@ -121,7 +145,7 @@ describe('ngx-mydatepicker', () => {
 
     it('select previous month', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -132,12 +156,12 @@ describe('ngx-mydatepicker', () => {
         let prevmonth = getElement(PREVMONTH);
         expect(prevmonth).not.toBe(null);
 
-        for(let i = 12; i > 0; i--) {
+        for (let i = 12; i > 0; i--) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
             expect(monthlabel).not.toBe(null);
-            expect(monthlabel.textContent).toBe(String(i));
+            expect(monthlabel.textContent.trim()).toBe(String(i));
 
             prevmonth.click();
         }
@@ -145,7 +169,7 @@ describe('ngx-mydatepicker', () => {
 
     it('select next month', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -156,12 +180,12 @@ describe('ngx-mydatepicker', () => {
         let nextmonth = getElement(NEXTMONTH);
         expect(nextmonth).not.toBe(null);
 
-        for(let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 12; i++) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
             expect(monthlabel).not.toBe(null);
-            expect(monthlabel.textContent).toBe(String(i));
+            expect(monthlabel.textContent.trim()).toBe(String(i));
 
             nextmonth.click();
         }
@@ -182,12 +206,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent).toBe('Dec');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Dec'));
 
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2015');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2015'));
     });
 
     it('select next month form selector', () => {
@@ -205,12 +229,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent).toBe('Feb');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Feb'));
 
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
     });
 
     it('select today from selector', () => {
@@ -240,12 +264,12 @@ describe('ngx-mydatepicker', () => {
         let prevyear = getElement(PREVYEAR);
         expect(prevyear).not.toBe(null);
 
-        for(let i = 2010; i > 2000; i--) {
+        for (let i = 2010; i > 2000; i--) {
             fixture.detectChanges();
 
             let yearlabel = getElement(YEARLABEL);
             expect(yearlabel).not.toBe(null);
-            expect(yearlabel.textContent).toBe(String(i));
+            expect(yearlabel.textContent.trim()).toBe(getThaiYearString(String(i)));
 
             prevyear.click();
         }
@@ -259,12 +283,12 @@ describe('ngx-mydatepicker', () => {
         let nextyear = getElement(NEXTYEAR);
         expect(nextyear).not.toBe(null);
 
-        for(let i = 2010; i < 2020; i++) {
+        for (let i = 2010; i < 2020; i++) {
             fixture.detectChanges();
 
             let yearlabel = getElement(YEARLABEL);
             expect(yearlabel).not.toBe(null);
-            expect(yearlabel.textContent).toBe(String(i));
+            expect(yearlabel.textContent.trim()).toBe(getThaiYearString(String(i)));
 
             nextyear.click();
         }
@@ -284,12 +308,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent).toBe('Dec');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Dec'));
 
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2015');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2015'));
     });
 
     it('select next month year change', () => {
@@ -306,12 +330,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent).toBe('Jan');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Jan'));
 
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2017');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2017'));
     });
 
     it('edit date in input box', () => {
@@ -324,15 +348,20 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let selection = getElement('.myDateInput');
 
-        selection.value = '12 feb 2017';
+        selection.value = '12 ก.พ. 2017';
         selection.dispatchEvent(new Event('keyup'));
 
         fixture.detectChanges();
         selection = getElement('.myDateInput');
-        expect(selection.value).toBe('12 Feb 2017');
+        expect(selection.value).toBe('12 ก.พ. 2017');
     });
 
     it('test calendar year 2016 month one by one - next month button', () => {
+        let opts: IMyOptions = {
+            firstDayOfWeek: "mo"
+        };
+
+        comp.parseOptions(opts);
         comp.setDefaultMonth('2016/01');
 
         comp.openCalendar();
@@ -344,17 +373,17 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement('.monthlabel');
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent.trim()).toBe('Jan');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Jan'));
 
         fixture.detectChanges();
         let yearlabel = getElement('.yearlabel');
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent.trim()).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
 
         let beginDate: Array<string> = ['28', '1', '29', '28', '25', '30', '27', '1', '29', '26', '31', '28'];
         let endDate: Array<string> = ['7', '13', '10', '8', '5', '10', '7', '11', '9', '6', '11', '8'];
 
-        for(let i = 0; i < 12; i++) {
+        for (let i = 0; i < 12; i++) {
             fixture.detectChanges();
             let currmonth = getElements('.caltable tbody tr td');
             expect(currmonth).not.toBe(null);
@@ -371,6 +400,11 @@ describe('ngx-mydatepicker', () => {
     });
 
     it('test calendar year 2016 month one by one - previous month button', () => {
+        let opts: IMyOptions = {
+            firstDayOfWeek: "mo"
+        };
+
+        comp.parseOptions(opts);
         comp.setDefaultMonth('2016/12');
 
         comp.openCalendar();
@@ -382,17 +416,17 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement('.monthlabel');
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent.trim()).toBe('Dec');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Dec'));
 
         fixture.detectChanges();
         let yearlabel = getElement('.yearlabel');
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent.trim()).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
 
         let beginDate: Array<string> = ['28', '1', '29', '28', '25', '30', '27', '1', '29', '26', '31', '28'];
         let endDate: Array<string> = ['7', '13', '10', '8', '5', '10', '7', '11', '9', '6', '11', '8'];
 
-        for(let i = 11; i > 0; i--) {
+        for (let i = 11; i > 0; i--) {
             fixture.detectChanges();
             let currmonth = getElements('.caltable tbody tr td');
             expect(currmonth).not.toBe(null);
@@ -410,7 +444,7 @@ describe('ngx-mydatepicker', () => {
 
     // options
     it('options - dayLabels', () => {
-        let options: IMyOptions = {dayLabels:  {su: '1', mo: '2', tu: '3', we: '4', th: '5', fr: '6', sa: '7'}, firstDayOfWeek: 'su'};
+        let options: IMyOptions = { dayLabels: { su: '1', mo: '2', tu: '3', we: '4', th: '5', fr: '6', sa: '7' }, firstDayOfWeek: 'su' };
 
         comp.setDefaultMonth('2016/05');
         comp.parseOptions(options);
@@ -421,7 +455,7 @@ describe('ngx-mydatepicker', () => {
         let ths = getElements('.weekdaytitle');
         expect(ths.length).toBe(7);
 
-        for(let i = 0; i < ths.length; i++) {
+        for (let i = 0; i < ths.length; i++) {
             let el = ths[i];
             expect(parseInt(el.textContent.trim())).toBe(i + 1);
         }
@@ -429,7 +463,7 @@ describe('ngx-mydatepicker', () => {
 
     it('options - monthLabels', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -440,12 +474,12 @@ describe('ngx-mydatepicker', () => {
         let nextmonth = getElement(NEXTMONTH);
         expect(nextmonth).not.toBe(null);
 
-        for(let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 12; i++) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
             expect(monthlabel).not.toBe(null);
-            expect(monthlabel.textContent).toBe(String(i));
+            expect(monthlabel.textContent.trim()).toBe(String(i));
 
             nextmonth.click();
         }
@@ -453,6 +487,11 @@ describe('ngx-mydatepicker', () => {
 
     it('options - dateFormat', () => {
         // default
+        let opts: IMyOptions = {
+            firstDayOfWeek: "mo"
+        };
+
+        comp.parseOptions(opts);
         comp.setDefaultMonth('2016/01');
         comp.openCalendar();
 
@@ -465,15 +504,13 @@ describe('ngx-mydatepicker', () => {
 
         fixture.detectChanges();
         let selection = getElement('.myDateInput');
-        expect(selection.value).toBe('2016-01-02');
+        expect(selection.value).toBe('02/01/2016');
 
         comp.closeCalendar();
 
 
         // dd.mm.yyyy
-        let opts: IMyOptions = {
-            dateFormat: 'dd.mm.yyyy'
-        };
+        opts.dateFormat = "dd.mm.yyyy";
 
         comp.parseOptions(opts);
 
@@ -507,7 +544,7 @@ describe('ngx-mydatepicker', () => {
 
         fixture.detectChanges();
         selection = getElement('.myDateInput');
-        expect(selection.value).toBe('01 Jan 2016');
+        expect(selection.value).toBe(`01 ${getThaiString('Jan')} 2016`);
     });
 
     it('options - showTodayBtn', () => {
@@ -546,7 +583,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let headertodaybtn = getElement('.headertodaybtn span:last-child');
         expect(headertodaybtn).not.toBe(null);
-        expect(headertodaybtn.textContent).toBe('Today');
+        expect(headertodaybtn.textContent.trim()).toBe('วันนี้');
 
         comp.closeCalendar();
 
@@ -562,28 +599,31 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         headertodaybtn = getElement('.headertodaybtn span:last-child');
         expect(headertodaybtn).not.toBe(null);
-        expect(headertodaybtn.textContent).toBe('text');
+        expect(headertodaybtn.textContent.trim()).toBe('text');
     });
 
     it('options - firstDayOfWeek', () => {
+        let opts: IMyOptions = {
+            firstDayOfWeek: "mo"
+        };
+
+        comp.parseOptions(opts);
         comp.setDefaultMonth('2016/01');
         comp.openCalendar();
 
         fixture.detectChanges();
         let first = getElement('.weekdaytitle:first-child');
         expect(first).not.toBe(null);
-        expect(first.textContent).toBe('Mon');
+        expect(first.textContent.trim()).toBe(getThaiString('Mon'));
 
         let last = getElement('.weekdaytitle:last-child');
         expect(last).not.toBe(null);
-        expect(last.textContent).toBe('Sun');
+        expect(last.textContent.trim()).toBe(getThaiString('Sun'));
 
         comp.closeCalendar();
 
 
-        let opts: IMyOptions = {
-            firstDayOfWeek: 'su'
-        };
+        opts.firstDayOfWeek = "su";
 
         comp.parseOptions(opts);
 
@@ -592,11 +632,11 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         first = getElement('.weekdaytitle:first-child');
         expect(first).not.toBe(null);
-        expect(first.textContent).toBe('Sun');
+        expect(first.textContent.trim()).toBe(getThaiString('Sun'));
 
         last = getElement('.weekdaytitle:last-child');
         expect(last).not.toBe(null);
-        expect(last.textContent).toBe('Sat');
+        expect(last.textContent.trim()).toBe(getThaiString('Sat'));
     });
 
     it('options - sunHighlight', () => {
@@ -666,7 +706,7 @@ describe('ngx-mydatepicker', () => {
         let opts: IMyOptions = {
             sunHighlight: false,
             satHighlight: false,
-            highlightDates: [{year: 2016, month: 1, day: 10}, {year: 2016, month: 1, day: 12}, {year: 2016, month: 1, day: 13}]
+            highlightDates: [{ year: 2016, month: 1, day: 10 }, { year: 2016, month: 1, day: 12 }, { year: 2016, month: 1, day: 13 }]
         };
 
         comp.parseOptions(opts);
@@ -778,15 +818,15 @@ describe('ngx-mydatepicker', () => {
         expect(monthcell.length).toBe(12);
 
         fixture.detectChanges();
-        expect(monthcell[0].textContent.trim()).toBe('Jan');
+        expect(monthcell[0].textContent.trim()).toBe(getThaiString('Jan'));
 
         fixture.detectChanges();
-        expect(monthcell[11].textContent.trim()).toBe('Dec');
+        expect(monthcell[11].textContent.trim()).toBe(getThaiString('Dec'));
 
         fixture.detectChanges();
         let selectedmonth = getElement('.selectedmonth');
         expect(selectedmonth).not.toBe(null);
-        expect(selectedmonth.textContent.trim()).toBe('May');
+        expect(selectedmonth.textContent.trim()).toBe(getThaiString('May'));
         selectedmonth.click();
 
         fixture.detectChanges();
@@ -820,15 +860,15 @@ describe('ngx-mydatepicker', () => {
         expect(yearcell.length).toBe(25);
 
         fixture.detectChanges();
-        expect(yearcell[0].textContent.trim()).toBe('2016');
+        expect(yearcell[0].textContent.trim()).toBe(getThaiYearString('2016'));
 
         fixture.detectChanges();
-        expect(yearcell[24].textContent.trim()).toBe('2040');
+        expect(yearcell[24].textContent.trim()).toBe(getThaiYearString('2040'));
 
         fixture.detectChanges();
         let selectedyear = getElement('.selectedyear');
         expect(selectedyear).not.toBe(null);
-        expect(selectedyear.textContent.trim()).toBe('2016');
+        expect(selectedyear.textContent.trim()).toBe(getThaiYearString('2016'));
 
         selectedyear.click();
 
@@ -837,12 +877,62 @@ describe('ngx-mydatepicker', () => {
         expect(yeartable).toBe(null);
     });
 
+    it('options - yearOffset', () => {
+        comp.setDefaultMonth('2017/06');
+        comp.openCalendar();
+
+        fixture.detectChanges();
+        let yearlabel = getElement(YEARLABEL);
+        expect(yearlabel).not.toBe(null);
+        expect(yearlabel.textContent.trim()).toBe('2560');
+
+        yearlabel.click();
+
+        fixture.detectChanges();
+        let yearcell = getElements('.yearcell');
+        expect(yearcell).not.toBe(null);
+        expect(yearcell.length).toBe(25);
+
+        fixture.detectChanges();
+        expect(yearcell[0].textContent.trim()).toBe('2560');
+
+        fixture.detectChanges();
+        expect(yearcell[24].textContent.trim()).toBe('2584');
+        comp.closeCalendar();
+
+        let opts: IMyOptions = {
+            yearOffset: 0
+        };
+
+        comp.parseOptions(opts);
+        comp.openCalendar();
+
+        fixture.detectChanges();
+        yearlabel = getElement(YEARLABEL);
+        expect(yearlabel).not.toBe(null);
+        expect(yearlabel.textContent.trim()).toBe('2017');
+
+        yearlabel.click();
+
+        fixture.detectChanges();
+        yearcell = getElements('.yearcell');
+        expect(yearcell).not.toBe(null);
+        expect(yearcell.length).toBe(25);
+
+        fixture.detectChanges();
+        expect(yearcell[0].textContent.trim()).toBe('2017');
+
+        fixture.detectChanges();
+        expect(yearcell[24].textContent.trim()).toBe('2041');
+        comp.closeCalendar();
+    });
+
     it('options - disableHeaderButtons', () => {
         comp.setDefaultMonth('2016/05');
 
         let opts: IMyOptions = {
             disableHeaderButtons: true,
-            disableUntil: {year: 2016, month: 4, day: 10}
+            disableUntil: { year: 2016, month: 4, day: 10 }
         };
 
         comp.parseOptions(opts);
@@ -851,7 +941,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('May');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('May'));
 
         fixture.detectChanges();
         let prevmonth = getElement(PREVMONTH);
@@ -861,7 +951,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('Apr');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('Apr'));
 
         fixture.detectChanges();
         let headerbtndisabled = getElements('.headerbtndisabled');
@@ -873,7 +963,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('Apr');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('Apr'));
 
         fixture.detectChanges();
         let prevyear = getElement(PREVYEAR);
@@ -883,19 +973,19 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let yearlabel = getElement('.headeryeartxt .headerlabelbtn');
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
 
         comp.closeCalendar();
 
 
-        opts.disableSince = {year: 2016, month: 7, day: 10};
+        opts.disableSince = { year: 2016, month: 7, day: 10 };
         comp.parseOptions(opts);
         comp.openCalendar();
 
         fixture.detectChanges();
         montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('May');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('May'));
 
         fixture.detectChanges();
         let nextmonth = getElement(NEXTMONTH);
@@ -905,7 +995,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('Jun');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('Jun'));
 
         fixture.detectChanges();
         headerbtndisabled = getElements('.headerbtndisabled');
@@ -917,7 +1007,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         montlabel = getElement('.headermonthtxt .headerlabelbtn');
         expect(montlabel).not.toBe(null);
-        expect(montlabel.textContent).toBe('Jun');
+        expect(montlabel.textContent.trim()).toBe(getThaiString('Jun'));
 
         fixture.detectChanges();
         let nextyear = getElement(NEXTYEAR);
@@ -927,7 +1017,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         yearlabel = getElement('.headeryeartxt .headerlabelbtn');
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
     });
 
     it('options - showWeekNmbers', () => {
@@ -1035,14 +1125,14 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2010');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2010'));
 
         prevyear.click();
 
         fixture.detectChanges();
         yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2010');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2010'));
     });
 
     it('options - maxYear', () => {
@@ -1063,20 +1153,20 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2020');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2020'));
 
         nextyear.click();
 
         fixture.detectChanges();
         yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent).toBe('2020');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2020'));
     });
 
     it('options - disableUntil', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableUntil: {year: 2017, month: 1, day: 26},
+            disableUntil: { year: 2017, month: 1, day: 26 },
             disableHeaderButtons: false
         };
 
@@ -1103,7 +1193,7 @@ describe('ngx-mydatepicker', () => {
     it('options - disableSince', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableSince: {year: 2017, month: 1, day: 12},
+            disableSince: { year: 2017, month: 1, day: 12 },
             disableHeaderButtons: false
         };
 
@@ -1130,7 +1220,7 @@ describe('ngx-mydatepicker', () => {
     it('options - disableDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableDates: [{year: 2017, month: 1, day: 12}, {year: 2017, month: 1, day: 14}]
+            disableDates: [{ year: 2017, month: 1, day: 12 }, { year: 2017, month: 1, day: 14 }]
         };
 
         comp.parseOptions(opts);
@@ -1164,14 +1254,14 @@ describe('ngx-mydatepicker', () => {
 
         fixture.detectChanges();
         selection = getElement('.myDateInput');
-        expect(selection.value).toBe('2017-01-13');
+        expect(selection.value).toBe('13/01/2017');
     });
 
     it('options - enableDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableUntil: {year: 2017, month: 1, day: 31},
-            enableDates: [{year: 2017, month: 1, day: 14}, {year: 2017, month: 1, day: 15}]
+            disableUntil: { year: 2017, month: 1, day: 31 },
+            enableDates: [{ year: 2017, month: 1, day: 14 }, { year: 2017, month: 1, day: 15 }]
         };
 
         comp.parseOptions(opts);
@@ -1191,15 +1281,15 @@ describe('ngx-mydatepicker', () => {
 
         fixture.detectChanges();
         let selection = getElement('.myDateInput');
-        expect(selection.value).toBe('2017-01-14');
+        expect(selection.value).toBe('14/01/2017');
     });
 
     it('options - disableDateRanges', () => {
         comp.setDefaultMonth('2016/10');
         let opts: IMyOptions = {
             disableDateRanges: [
-                {begin: {year: 2016, month: 10, day: 5}, end: {year: 2016, month: 10, day: 7}},
-                {begin: {year: 2016, month: 10, day: 10}, end: {year: 2016, month: 10, day: 12}}
+                { begin: { year: 2016, month: 10, day: 5 }, end: { year: 2016, month: 10, day: 7 } },
+                { begin: { year: 2016, month: 10, day: 10 }, end: { year: 2016, month: 10, day: 12 } }
             ]
         };
 
@@ -1223,7 +1313,7 @@ describe('ngx-mydatepicker', () => {
     it('options - markDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            markDates: [{dates: [{year: 2017, month: 1, day: 14}, {year: 2017, month: 1, day: 15}], color: 'red'}]
+            markDates: [{ dates: [{ year: 2017, month: 1, day: 14 }, { year: 2017, month: 1, day: 15 }], color: 'red' }]
         };
 
         comp.parseOptions(opts);
@@ -1250,7 +1340,7 @@ describe('ngx-mydatepicker', () => {
     it('options - markWeekends', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            markWeekends: {marked: true, color: 'red'}
+            markWeekends: { marked: true, color: 'red' }
         };
 
         comp.parseOptions(opts);
@@ -1263,7 +1353,7 @@ describe('ngx-mydatepicker', () => {
 
         comp.closeCalendar();
 
-        opts.markWeekends = {marked: false, color: ''};
+        opts.markWeekends = { marked: false, color: '' };
 
         comp.parseOptions(opts);
         comp.openCalendar();
@@ -1319,7 +1409,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let selector = getElement('.selector');
         expect(selector).not.toBe(null);
-        expect(selector.attributes['style'].textContent).not.toContain('left: 0px');
+        expect(selector.attributes['style'].textContent.trim()).not.toContain('left: 0px');
     });
 
     it('options - openSelectorTopOfInput', () => {
@@ -1334,7 +1424,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let selector = getElement('.selector');
         expect(selector).not.toBe(null);
-        expect(selector.attributes['style'].textContent).not.toContain('bottom: initial');
+        expect(selector.attributes['style'].textContent.trim()).not.toContain('bottom: initial');
     });
 
     it('options - closeSelectorOnDateSelect', () => {
@@ -1388,7 +1478,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let prevmonth = getElement(PREVMONTH);
         expect(prevmonth).not.toBe(null);
-        expect(prevmonth.attributes['aria-label'].textContent).toBe(opts.ariaLabelPrevMonth);
+        expect(prevmonth.attributes['aria-label'].textContent.trim()).toBe(opts.ariaLabelPrevMonth);
     });
 
     it('options - ariaLabelNextMonth', () => {
@@ -1403,7 +1493,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let nextmonth = getElement(NEXTMONTH);
         expect(nextmonth).not.toBe(null);
-        expect(nextmonth.attributes['aria-label'].textContent).toBe(opts.ariaLabelNextMonth);
+        expect(nextmonth.attributes['aria-label'].textContent.trim()).toBe(opts.ariaLabelNextMonth);
     });
 
 
@@ -1419,7 +1509,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let prevyear = getElement(PREVYEAR);
         expect(prevyear).not.toBe(null);
-        expect(prevyear.attributes['aria-label'].textContent).toBe(opts.ariaLabelPrevYear);
+        expect(prevyear.attributes['aria-label'].textContent.trim()).toBe(opts.ariaLabelPrevYear);
     });
 
     it('options - ariaLabelNextYear', () => {
@@ -1434,7 +1524,7 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let nextyear = getElement(NEXTYEAR);
         expect(nextyear).not.toBe(null);
-        expect(nextyear.attributes['aria-label'].textContent).toBe(opts.ariaLabelNextYear);
+        expect(nextyear.attributes['aria-label'].textContent.trim()).toBe(opts.ariaLabelNextYear);
     });
 
     it('defaultMonth attribute', () => {
@@ -1444,12 +1534,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         let monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent.trim()).toBe('Feb');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Feb'));
 
         fixture.detectChanges();
         let yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent.trim()).toBe('2016');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2016'));
 
         comp.closeCalendar();
 
@@ -1460,12 +1550,12 @@ describe('ngx-mydatepicker', () => {
         fixture.detectChanges();
         monthlabel = getElement(MONTHLABEL);
         expect(monthlabel).not.toBe(null);
-        expect(monthlabel.textContent.trim()).toBe('Aug');
+        expect(monthlabel.textContent.trim()).toBe(getThaiString('Aug'));
 
         fixture.detectChanges();
         yearlabel = getElement(YEARLABEL);
         expect(yearlabel).not.toBe(null);
-        expect(yearlabel.textContent.trim()).toBe('2018');
+        expect(yearlabel.textContent.trim()).toBe(getThaiYearString('2018'));
     });
 
 });

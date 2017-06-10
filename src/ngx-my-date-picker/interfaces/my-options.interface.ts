@@ -20,6 +20,7 @@ export interface IMyOptions {
     markCurrentYear?: boolean;
     monthSelector?: boolean;
     yearSelector?: boolean;
+    yearOffset?: number;
     disableHeaderButtons?: boolean;
     showWeekNumbers?: boolean;
     selectorHeight?: string;
@@ -44,4 +45,4 @@ export interface IMyOptions {
     ariaLabelNextYear?: string;
 }
 
-export interface INgxMyDpOptions extends IMyOptions {}
+export interface INgxMyDpOptions extends IMyOptions { }

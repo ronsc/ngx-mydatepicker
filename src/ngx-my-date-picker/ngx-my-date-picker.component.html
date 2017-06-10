@@ -1,71 +1,228 @@
 <div class="ngxmdp">
-    <div class="selector" #selectorEl [ngxfocus]="1" [ngStyle]="{'width': opts.selectorWidth, 'height' : opts.selectorHeight, 'bottom': opts.openSelectorTopOfInput?((inputHeight + 2)+'px') : 'initial', 'right': opts.alignSelectorRight ? '0' : 'initial'}" [ngClass]="{'selectorarrow': opts.showSelectorArrow, 'selectorarrowleft': opts.showSelectorArrow&&!opts.alignSelectorRight, 'selectorarrowright': opts.showSelectorArrow&&opts.alignSelectorRight}" (keyup)="onCloseSelector($event)" tabindex="0">
+    <div
+        class="selector"
+        #selectorEl
+        [ngxfocus]="1"
+        [ngStyle]="{'width': opts.selectorWidth, 'height' : opts.selectorHeight, 'bottom': opts.openSelectorTopOfInput?((inputHeight + 2)+'px') : 'initial', 'right': opts.alignSelectorRight ? '0' : 'initial'}"
+        [ngClass]="{'selectorarrow': opts.showSelectorArrow, 'selectorarrowleft': opts.showSelectorArrow&&!opts.alignSelectorRight, 'selectorarrowright': opts.showSelectorArrow&&opts.alignSelectorRight}"
+        (keyup)="onCloseSelector($event)"
+        tabindex="0"
+    >
         <table class="header">
-            <tr>
-                <td>
-                    <div style="float:left">
-                        <div class="headerbtncell"><button type="button" [attr.aria-label]="opts.ariaLabelPrevMonth" class="headerbtn ngxmdpicon icon-ngxmydpleft" (click)="onPrevMonth()" [disabled]="prevMonthDisabled" [ngClass]="{'headerbtnenabled': !prevMonthDisabled, 'headerbtndisabled': prevMonthDisabled}"></button></div>
-                        <div class="headermonthtxt">
-                            <button class="headerlabelbtn" [ngClass]="{'monthlabel': opts.monthSelector, 'headerlabelbtnnotedit': !opts.monthSelector}" type="button" (click)="opts.monthSelector&&onSelectMonthClicked($event)" tabindex="{{opts.monthSelector?'0':'-1'}}">{{visibleMonth.monthTxt}}</button>
+            <tbody>
+                <tr>
+                    <td>
+                        <div style="float:left">
+                            <div class="headerbtncell">
+                                <button
+                                    type="button"
+                                    [attr.aria-label]="opts.ariaLabelPrevMonth"
+                                    class="headerbtn ngxmdpicon icon-ngxmydpleft"
+                                    (click)="onPrevMonth()"
+                                    [disabled]="prevMonthDisabled"
+                                    [ngClass]="{'headerbtnenabled': !prevMonthDisabled, 'headerbtndisabled': prevMonthDisabled}"
+                                ></button>
+                            </div>
+                            <div class="headermonthtxt">
+                                <button
+                                    class="headerlabelbtn"
+                                    [ngClass]="{'monthlabel': opts.monthSelector, 'headerlabelbtnnotedit': !opts.monthSelector}"
+                                    type="button"
+                                    (click)="opts.monthSelector&&onSelectMonthClicked($event)"
+                                    tabindex="{{opts.monthSelector?'0':'-1'}}"
+                                >
+                                    {{visibleMonth.monthTxt}}
+                                </button>
+                            </div>
+                            <div class="headerbtncell">
+                                <button
+                                    type="button"
+                                    [attr.aria-label]="opts.ariaLabelNextMonth"
+                                    class="headerbtn ngxmdpicon icon-ngxmydpright"
+                                    (click)="onNextMonth()"
+                                    [disabled]="nextMonthDisabled"
+                                    [ngClass]="{'headerbtnenabled': !nextMonthDisabled, 'headerbtndisabled': nextMonthDisabled}"
+                                ></button>
+                            </div>
                         </div>
-                        <div class="headerbtncell"><button type="button" [attr.aria-label]="opts.ariaLabelNextMonth" class="headerbtn ngxmdpicon icon-ngxmydpright" (click)="onNextMonth()" [disabled]="nextMonthDisabled" [ngClass]="{'headerbtnenabled': !nextMonthDisabled, 'headerbtndisabled': nextMonthDisabled}"></button></div>
-                    </div>
-                </td>
-                <td>
-                    <button *ngIf="opts.showTodayBtn" type="button" class="headertodaybtn" (click)="onTodayClicked()" [disabled]="disableTodayBtn" [ngClass]="{'headertodaybtnenabled': !disableTodayBtn, 'headertodaybtndisabled': disableTodayBtn}">
-                        <span class="ngxmdpicon icon-ngxmydptoday"></span>
-                        <span>{{opts.todayBtnTxt}}</span>
-                    </button>
-                </td>
-                <td>
-                    <div style="float:right">
-                        <div class="headerbtncell"><button type="button" [attr.aria-label]="opts.ariaLabelPrevYear" class="headerbtn ngxmdpicon icon-ngxmydpleft" (click)="onPrevYear()" [disabled]="prevYearDisabled" [ngClass]="{'headerbtnenabled': !prevYearDisabled, 'headerbtndisabled': prevYearDisabled}"></button></div>
-                        <div class="headeryeartxt">
-                            <button class="headerlabelbtn" [ngClass]="{'yearlabel': opts.yearSelector, 'headerlabelbtnnotedit': !opts.yearSelector}" type="button" (click)="opts.yearSelector&&onSelectYearClicked($event)" tabindex="{{opts.yearSelector?'0':'-1'}}">{{visibleMonth.year}}</button>
+                    </td>
+                    <td>
+                        <button
+                            *ngIf="opts.showTodayBtn"
+                            type="button"
+                            class="headertodaybtn"
+                            (click)="onTodayClicked()"
+                            [disabled]="disableTodayBtn"
+                            [ngClass]="{'headertodaybtnenabled': !disableTodayBtn, 'headertodaybtndisabled': disableTodayBtn}"
+                        >
+                            <span class="ngxmdpicon icon-ngxmydptoday"></span>
+                            <span>{{opts.todayBtnTxt}}</span>
+                        </button>
+                    </td>
+                    <td>
+                        <div style="float:right">
+                            <div class="headerbtncell">
+                                <button
+                                    type="button"
+                                    [attr.aria-label]="opts.ariaLabelPrevYear"
+                                    class="headerbtn ngxmdpicon icon-ngxmydpleft"
+                                    (click)="onPrevYear()"
+                                    [disabled]="prevYearDisabled"
+                                    [ngClass]="{'headerbtnenabled': !prevYearDisabled, 'headerbtndisabled': prevYearDisabled}"
+                                ></button>
+                            </div>
+                            <div class="headeryeartxt">
+                                <button
+                                    class="headerlabelbtn"
+                                    [ngClass]="{'yearlabel': opts.yearSelector, 'headerlabelbtnnotedit': !opts.yearSelector}"
+                                    type="button"
+                                    (click)="opts.yearSelector&&onSelectYearClicked($event)"
+                                    tabindex="{{opts.yearSelector?'0':'-1'}}"
+                                >
+                                    {{visibleMonth.year + opts.yearOffset}}
+                                </button>
+                            </div>
+                            <div class="headerbtncell">
+                                <button
+                                    type="button"
+                                    [attr.aria-label]="opts.ariaLabelNextYear"
+                                    class="headerbtn ngxmdpicon icon-ngxmydpright"
+                                    (click)="onNextYear()"
+                                    [disabled]="nextYearDisabled"
+                                    [ngClass]="{'headerbtnenabled': !nextYearDisabled, 'headerbtndisabled': nextYearDisabled}"
+                                ></button>
+                            </div>
                         </div>
-                        <div class="headerbtncell"><button type="button" [attr.aria-label]="opts.ariaLabelNextYear" class="headerbtn ngxmdpicon icon-ngxmydpright" (click)="onNextYear()" [disabled]="nextYearDisabled" [ngClass]="{'headerbtnenabled': !nextYearDisabled, 'headerbtndisabled': nextYearDisabled}"></button></div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-        <table class="caltable" *ngIf="!selectMonth&&!selectYear">
-            <thead><tr><th class="weekdaytitle weekdaytitleweeknbr" *ngIf="opts.showWeekNumbers&&opts.firstDayOfWeek==='mo'">#</th><th class="weekdaytitle" scope="col" *ngFor="let d of weekDays">{{d}}</th></tr></thead>
+        <table
+            class="caltable"
+            *ngIf="!selectMonth&&!selectYear"
+        >
+            <thead>
+                <tr>
+                    <th
+                        class="weekdaytitle weekdaytitleweeknbr"
+                        *ngIf="opts.showWeekNumbers&&opts.firstDayOfWeek==='mo'"
+                    >
+                        #
+                    </th>
+                    <th
+                        class="weekdaytitle"
+                        scope="col"
+                        *ngFor="let d of weekDays"
+                    >
+                        {{d}}
+                    </th>
+                </tr>
+            </thead>
             <tbody>
                 <tr *ngFor="let w of dates">
-                    <td class="daycell daycellweeknbr" *ngIf="opts.showWeekNumbers&&opts.firstDayOfWeek==='mo'">{{w.weekNbr}}</td>
-                    <td class="daycell" *ngFor="let d of w.week" [ngClass]="{'currmonth':d.cmo===currMonthId&&!d.disabled, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===currMonthId, 'disabled': d.disabled, 'tablesingleday': d.cmo===currMonthId&&!d.disabled}" (click)="!d.disabled&&onCellClicked(d);$event.stopPropagation()" (keydown)="onCellKeyDown($event, d)" tabindex="0">
-                        <div *ngIf="d.markedDate.marked" class="markdate" [ngStyle]="{'background-color': d.markedDate.color}"></div>
-                        <div class="datevalue" [ngClass]="{'prevmonth':d.cmo===prevMonthId,'currmonth':d.cmo===currMonthId,'nextmonth':d.cmo===nextMonthId,'highlight':d.highlight}">
+                    <td
+                        class="daycell daycellweeknbr"
+                        *ngIf="opts.showWeekNumbers&&opts.firstDayOfWeek==='mo'"
+                    >
+                        {{w.weekNbr}}
+                    </td>
+                    <td
+                        class="daycell"
+                        *ngFor="let d of w.week"
+                        [ngClass]="{'currmonth':d.cmo===currMonthId&&!d.disabled, 'selectedday':selectedDate.day===d.dateObj.day && selectedDate.month===d.dateObj.month && selectedDate.year===d.dateObj.year && d.cmo===currMonthId, 'disabled': d.disabled, 'tablesingleday': d.cmo===currMonthId&&!d.disabled}"
+                        (click)="!d.disabled&&onCellClicked(d);$event.stopPropagation()"
+                        (keydown)="onCellKeyDown($event, d)"
+                        tabindex="0"
+                    >
+                        <div
+                            *ngIf="d.markedDate.marked"
+                            class="markdate"
+                            [ngStyle]="{'background-color': d.markedDate.color}"
+                        ></div>
+                        <div
+                            class="datevalue"
+                            [ngClass]="{'prevmonth':d.cmo===prevMonthId,'currmonth':d.cmo===currMonthId,'nextmonth':d.cmo===nextMonthId,'highlight':d.highlight}"
+                        >
                             <span [ngClass]="{'markcurrday':d.currDay&&opts.markCurrentDay, 'dimday': d.highlight && (d.cmo===prevMonthId || d.cmo===nextMonthId || d.disabled)}">{{d.dateObj.day}}</span>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table class="monthtable" *ngIf="selectMonth">
+        <table
+            class="monthtable"
+            *ngIf="selectMonth"
+        >
             <tbody>
                 <tr *ngFor="let mr of months">
-                    <td class="monthcell tablesinglemonth" [ngClass]="{'selectedmonth': m.selected, 'disabled': m.disabled}" *ngFor="let m of mr" (click)="!m.disabled&&onMonthCellClicked(m);$event.stopPropagation()" (keydown)="onMonthCellKeyDown($event, m)" tabindex="0">
-                        <div class="monthvalue" [ngClass]="{'markcurrmonth':m.currMonth&&opts.markCurrentMonth}">{{m.name}}</div>
+                    <td
+                        class="monthcell tablesinglemonth"
+                        [ngClass]="{'selectedmonth': m.selected, 'disabled': m.disabled}"
+                        *ngFor="let m of mr"
+                        (click)="!m.disabled&&onMonthCellClicked(m);$event.stopPropagation()"
+                        (keydown)="onMonthCellKeyDown($event, m)"
+                        tabindex="0"
+                    >
+                        <div
+                            class="monthvalue"
+                            [ngClass]="{'markcurrmonth':m.currMonth&&opts.markCurrentMonth}"
+                        >
+                            {{m.name}}
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table class="yeartable" *ngIf="selectYear">
+        <table
+            class="yeartable"
+            *ngIf="selectYear"
+        >
             <tbody>
                 <tr>
-                    <td colspan="5" class="yearchangebtncell" (click)="$event.stopPropagation()">
-                        <button type="button" class="yearchangebtn ngxmdpicon icon-ngxmydpup" (click)="onPrevYears($event, years[0][0].year)" [disabled]="prevYearsDisabled" [ngClass]="{'yearchangebtnenabled': !prevYearsDisabled, 'yearchangebtndisabled': prevYearsDisabled}"></button>
+                    <td
+                        colspan="5"
+                        class="yearchangebtncell"
+                        (click)="$event.stopPropagation()"
+                    >
+                        <button
+                            type="button"
+                            class="yearchangebtn ngxmdpicon icon-ngxmydpup"
+                            (click)="onPrevYears($event, years[0][0].year)"
+                            [disabled]="prevYearsDisabled"
+                            [ngClass]="{'yearchangebtnenabled': !prevYearsDisabled, 'yearchangebtndisabled': prevYearsDisabled}"
+                        ></button>
                     </td>
                 </tr>
                 <tr *ngFor="let yr of years">
-                    <td class="yearcell tablesingleyear" [ngClass]="{'selectedyear': y.selected, 'disabled': y.disabled}" *ngFor="let y of yr" (click)="!y.disabled&&onYearCellClicked(y);$event.stopPropagation()" (keydown)="onYearCellKeyDown($event, y)" tabindex="0">
-                        <div class="yearvalue" [ngClass]="{'markcurryear':y.currYear&&opts.markCurrentYear}">{{y.year}}</div>
+                    <td
+                        class="yearcell tablesingleyear"
+                        [ngClass]="{'selectedyear': y.selected, 'disabled': y.disabled}"
+                        *ngFor="let y of yr"
+                        (click)="!y.disabled&&onYearCellClicked(y);$event.stopPropagation()"
+                        (keydown)="onYearCellKeyDown($event, y)"
+                        tabindex="0"
+                    >
+                        <div
+                            class="yearvalue"
+                            [ngClass]="{'markcurryear':y.currYear&&opts.markCurrentYear}"
+                        >
+                            {{y.year + opts.yearOffset}}
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5" class="yearchangebtncell" (click)="$event.stopPropagation()">
-                        <button type="button" class="yearchangebtn ngxmdpicon icon-ngxmydpdown" (click)="onNextYears($event, years[0][0].year)" [disabled]="nextYearsDisabled" [ngClass]="{'yearchangebtnenabled': !nextYearsDisabled, 'yearchangebtndisabled': nextYearsDisabled}"></button>
+                    <td
+                        colspan="5"
+                        class="yearchangebtncell"
+                        (click)="$event.stopPropagation()"
+                    >
+                        <button
+                            type="button"
+                            class="yearchangebtn ngxmdpicon icon-ngxmydpdown"
+                            (click)="onNextYears($event, years[0][0].year)"
+                            [disabled]="nextYearsDisabled"
+                            [ngClass]="{'yearchangebtnenabled': !nextYearsDisabled, 'yearchangebtndisabled': nextYearsDisabled}"
+                        ></button>
                     </td>
                 </tr>
             </tbody>
