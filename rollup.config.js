@@ -1,6 +1,6 @@
 export default {
     entry: 'npmdist/dist/index.js',
-    dest: 'npmdist/bundles/ngx-mydatepicker.umd.js',
+    dest: 'npmdist/bundles/ngx-mydatepicker-th.umd.js',
     format: 'umd',
     moduleName: 'ngx-mydatepicker',
     sourceMap: true,

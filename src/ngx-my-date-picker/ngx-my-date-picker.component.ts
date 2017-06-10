@@ -61,6 +61,7 @@ export class NgxMyDatePicker {
     }
 
     initialize(opts: IMyOptions, defaultMonth: string, inputValue: string, inputHeight: number, dc: Function, cvc: Function, cbe: Function): void {
+        opts.yearOffset = isNaN(opts.yearOffset) ? 543 : +opts.yearOffset;
         this.opts = opts;
         this.weekDays.length = 0;
 

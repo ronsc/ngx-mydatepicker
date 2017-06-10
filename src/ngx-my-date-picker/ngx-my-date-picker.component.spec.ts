@@ -1,12 +1,12 @@
 ///<reference path="../../node_modules/@types/jasmine/index.d.ts"/>
 
-import {FormsModule} from "@angular/forms";
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement, Component, ViewChild} from '@angular/core';
-import {NgxMyDatePickerModule} from './ngx-my-date-picker.module';
-import {NgxMyDatePickerDirective} from './ngx-my-date-picker.input';
-import {IMyOptions} from "./interfaces/my-options.interface";
+import { FormsModule } from "@angular/forms";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement, Component, ViewChild } from '@angular/core';
+import { NgxMyDPTHModule } from './ngx-my-date-picker.module';
+import { NgxMyDatePickerDirective } from './ngx-my-date-picker.input';
+import { IMyOptions } from "./interfaces/my-options.interface";
 
 let comp: NgxMyDatepickerTestComponent;
 let fixture: ComponentFixture<NgxMyDatepickerTestComponent>;
@@ -68,7 +68,7 @@ describe('ngx-mydatepicker', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [NgxMyDatepickerTestComponent],
-            imports: [FormsModule, NgxMyDatePickerModule]
+            imports: [FormsModule, NgxMyDPTHModule]
         });
         fixture = TestBed.createComponent(NgxMyDatepickerTestComponent);
         comp = fixture.componentInstance;
@@ -121,7 +121,7 @@ describe('ngx-mydatepicker', () => {
 
     it('select previous month', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -132,7 +132,7 @@ describe('ngx-mydatepicker', () => {
         let prevmonth = getElement(PREVMONTH);
         expect(prevmonth).not.toBe(null);
 
-        for(let i = 12; i > 0; i--) {
+        for (let i = 12; i > 0; i--) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
@@ -145,7 +145,7 @@ describe('ngx-mydatepicker', () => {
 
     it('select next month', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -156,7 +156,7 @@ describe('ngx-mydatepicker', () => {
         let nextmonth = getElement(NEXTMONTH);
         expect(nextmonth).not.toBe(null);
 
-        for(let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 12; i++) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
@@ -240,7 +240,7 @@ describe('ngx-mydatepicker', () => {
         let prevyear = getElement(PREVYEAR);
         expect(prevyear).not.toBe(null);
 
-        for(let i = 2010; i > 2000; i--) {
+        for (let i = 2010; i > 2000; i--) {
             fixture.detectChanges();
 
             let yearlabel = getElement(YEARLABEL);
@@ -259,7 +259,7 @@ describe('ngx-mydatepicker', () => {
         let nextyear = getElement(NEXTYEAR);
         expect(nextyear).not.toBe(null);
 
-        for(let i = 2010; i < 2020; i++) {
+        for (let i = 2010; i < 2020; i++) {
             fixture.detectChanges();
 
             let yearlabel = getElement(YEARLABEL);
@@ -354,7 +354,7 @@ describe('ngx-mydatepicker', () => {
         let beginDate: Array<string> = ['28', '1', '29', '28', '25', '30', '27', '1', '29', '26', '31', '28'];
         let endDate: Array<string> = ['7', '13', '10', '8', '5', '10', '7', '11', '9', '6', '11', '8'];
 
-        for(let i = 0; i < 12; i++) {
+        for (let i = 0; i < 12; i++) {
             fixture.detectChanges();
             let currmonth = getElements('.caltable tbody tr td');
             expect(currmonth).not.toBe(null);
@@ -392,7 +392,7 @@ describe('ngx-mydatepicker', () => {
         let beginDate: Array<string> = ['28', '1', '29', '28', '25', '30', '27', '1', '29', '26', '31', '28'];
         let endDate: Array<string> = ['7', '13', '10', '8', '5', '10', '7', '11', '9', '6', '11', '8'];
 
-        for(let i = 11; i > 0; i--) {
+        for (let i = 11; i > 0; i--) {
             fixture.detectChanges();
             let currmonth = getElements('.caltable tbody tr td');
             expect(currmonth).not.toBe(null);
@@ -410,7 +410,7 @@ describe('ngx-mydatepicker', () => {
 
     // options
     it('options - dayLabels', () => {
-        let options: IMyOptions = {dayLabels:  {su: '1', mo: '2', tu: '3', we: '4', th: '5', fr: '6', sa: '7'}, firstDayOfWeek: 'su'};
+        let options: IMyOptions = { dayLabels: { su: '1', mo: '2', tu: '3', we: '4', th: '5', fr: '6', sa: '7' }, firstDayOfWeek: 'su' };
 
         comp.setDefaultMonth('2016/05');
         comp.parseOptions(options);
@@ -421,7 +421,7 @@ describe('ngx-mydatepicker', () => {
         let ths = getElements('.weekdaytitle');
         expect(ths.length).toBe(7);
 
-        for(let i = 0; i < ths.length; i++) {
+        for (let i = 0; i < ths.length; i++) {
             let el = ths[i];
             expect(parseInt(el.textContent.trim())).toBe(i + 1);
         }
@@ -429,7 +429,7 @@ describe('ngx-mydatepicker', () => {
 
     it('options - monthLabels', () => {
         let opts: IMyOptions = {
-            monthLabels: {1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12"}
+            monthLabels: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7", 8: "8", 9: "9", 10: "10", 11: "11", 12: "12" }
         };
 
         comp.parseOptions(opts);
@@ -440,7 +440,7 @@ describe('ngx-mydatepicker', () => {
         let nextmonth = getElement(NEXTMONTH);
         expect(nextmonth).not.toBe(null);
 
-        for(let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 12; i++) {
             fixture.detectChanges();
 
             let monthlabel = getElement(MONTHLABEL);
@@ -666,7 +666,7 @@ describe('ngx-mydatepicker', () => {
         let opts: IMyOptions = {
             sunHighlight: false,
             satHighlight: false,
-            highlightDates: [{year: 2016, month: 1, day: 10}, {year: 2016, month: 1, day: 12}, {year: 2016, month: 1, day: 13}]
+            highlightDates: [{ year: 2016, month: 1, day: 10 }, { year: 2016, month: 1, day: 12 }, { year: 2016, month: 1, day: 13 }]
         };
 
         comp.parseOptions(opts);
@@ -842,7 +842,7 @@ describe('ngx-mydatepicker', () => {
 
         let opts: IMyOptions = {
             disableHeaderButtons: true,
-            disableUntil: {year: 2016, month: 4, day: 10}
+            disableUntil: { year: 2016, month: 4, day: 10 }
         };
 
         comp.parseOptions(opts);
@@ -888,7 +888,7 @@ describe('ngx-mydatepicker', () => {
         comp.closeCalendar();
 
 
-        opts.disableSince = {year: 2016, month: 7, day: 10};
+        opts.disableSince = { year: 2016, month: 7, day: 10 };
         comp.parseOptions(opts);
         comp.openCalendar();
 
@@ -1076,7 +1076,7 @@ describe('ngx-mydatepicker', () => {
     it('options - disableUntil', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableUntil: {year: 2017, month: 1, day: 26},
+            disableUntil: { year: 2017, month: 1, day: 26 },
             disableHeaderButtons: false
         };
 
@@ -1103,7 +1103,7 @@ describe('ngx-mydatepicker', () => {
     it('options - disableSince', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableSince: {year: 2017, month: 1, day: 12},
+            disableSince: { year: 2017, month: 1, day: 12 },
             disableHeaderButtons: false
         };
 
@@ -1130,7 +1130,7 @@ describe('ngx-mydatepicker', () => {
     it('options - disableDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableDates: [{year: 2017, month: 1, day: 12}, {year: 2017, month: 1, day: 14}]
+            disableDates: [{ year: 2017, month: 1, day: 12 }, { year: 2017, month: 1, day: 14 }]
         };
 
         comp.parseOptions(opts);
@@ -1170,8 +1170,8 @@ describe('ngx-mydatepicker', () => {
     it('options - enableDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            disableUntil: {year: 2017, month: 1, day: 31},
-            enableDates: [{year: 2017, month: 1, day: 14}, {year: 2017, month: 1, day: 15}]
+            disableUntil: { year: 2017, month: 1, day: 31 },
+            enableDates: [{ year: 2017, month: 1, day: 14 }, { year: 2017, month: 1, day: 15 }]
         };
 
         comp.parseOptions(opts);
@@ -1198,8 +1198,8 @@ describe('ngx-mydatepicker', () => {
         comp.setDefaultMonth('2016/10');
         let opts: IMyOptions = {
             disableDateRanges: [
-                {begin: {year: 2016, month: 10, day: 5}, end: {year: 2016, month: 10, day: 7}},
-                {begin: {year: 2016, month: 10, day: 10}, end: {year: 2016, month: 10, day: 12}}
+                { begin: { year: 2016, month: 10, day: 5 }, end: { year: 2016, month: 10, day: 7 } },
+                { begin: { year: 2016, month: 10, day: 10 }, end: { year: 2016, month: 10, day: 12 } }
             ]
         };
 
@@ -1223,7 +1223,7 @@ describe('ngx-mydatepicker', () => {
     it('options - markDates', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            markDates: [{dates: [{year: 2017, month: 1, day: 14}, {year: 2017, month: 1, day: 15}], color: 'red'}]
+            markDates: [{ dates: [{ year: 2017, month: 1, day: 14 }, { year: 2017, month: 1, day: 15 }], color: 'red' }]
         };
 
         comp.parseOptions(opts);
@@ -1250,7 +1250,7 @@ describe('ngx-mydatepicker', () => {
     it('options - markWeekends', () => {
         comp.setDefaultMonth('2017/01');
         let opts: IMyOptions = {
-            markWeekends: {marked: true, color: 'red'}
+            markWeekends: { marked: true, color: 'red' }
         };
 
         comp.parseOptions(opts);
@@ -1263,7 +1263,7 @@ describe('ngx-mydatepicker', () => {
 
         comp.closeCalendar();
 
-        opts.markWeekends = {marked: false, color: ''};
+        opts.markWeekends = { marked: false, color: '' };
 
         comp.parseOptions(opts);
         comp.openCalendar();
